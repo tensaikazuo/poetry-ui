@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   title: {
@@ -15,6 +17,15 @@ const useStyles = makeStyles({
       width: '100%',
     },
   },
+  button: {
+    textAlign: 'center',
+  },
+  mbsm: {
+    marginBottom: '8px',
+  },
+  mbmd: {
+    marginBottom: '16px',
+  }
 });
 
 function App() {
@@ -23,12 +34,16 @@ function App() {
     <>
       <CssBaseline />
       <div className={classes.title}>
-        <Typography variant="h2" component="h1" gutterBottom>
+        <Typography variant="h2" component="h1">
           Poetry-UI
         </Typography>
       </div>
-      <div className={classes.entry}>
-        <TextareaAutosize aria-label="minimum height" rowsMin={3} placeholder="Please write your work..." />
+      <div className={`${classes.entry} ${classes.mbsm}`}>
+        <TextField label="Title" className={classes.mbmd} />
+        <TextareaAutosize aria-label="minimum height" rowsMin={10} placeholder="Please write your work..." />
+      </div>
+      <div className={classes.button}>
+        <Button variant="outlined">Preview</Button>
       </div>
     </>
   );
