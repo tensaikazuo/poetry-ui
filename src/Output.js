@@ -1,10 +1,14 @@
 import React from 'react';
+
+import { useStateMachine } from "little-state-machine";
+import updateAction from "./updateAction";
+
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+//import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+//import TextField from '@material-ui/core/TextField';
+//import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   title: {
@@ -28,7 +32,10 @@ const useStyles = makeStyles({
   }
 });
 
-function Output() {
+const Output = props => {
+  const { state } = useStateMachine(updateAction);
+  console.log(state.data);
+
   const classes = useStyles();
   return (
     <>
@@ -39,11 +46,7 @@ function Output() {
         </Typography>
       </div>
       <div className={`${classes.entry} ${classes.mbsm}`}>
-        <TextField label="Title" className={classes.mbmd} />
-        <TextareaAutosize aria-label="minimum height" rowsMin={10} placeholder="Please write your work..." />
-      </div>
-      <div className={classes.button}>
-        <Button variant="outlined">Preview</Button>
+        <pre>{JSON.stringify(state, null, 2)}</pre>;
       </div>
     </>
   );
