@@ -9,8 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Typography from '@material-ui/core/Typography';
-//import MyInput from '@material-ui/core/Input';
-//import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
@@ -56,7 +54,6 @@ const Input = props => {
   const { register, handleSubmit } = useForm();
   const { action } = useStateMachine(updateAction);
   const onSubmit = data => {
-    console.log(data)
     action(data);
     props.history.push("./output");
   };

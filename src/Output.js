@@ -5,10 +5,7 @@ import updateAction from "./updateAction";
 
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-//import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Typography from '@material-ui/core/Typography';
-//import TextField from '@material-ui/core/TextField';
-//import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   title: {
@@ -34,8 +31,16 @@ const useStyles = makeStyles({
 
 const Output = props => {
   const { state } = useStateMachine(updateAction);
-  console.log(state.data);
-
+  const title = state.data.title;
+  const rawContent = state.data.content;
+  const content = rawContent.split('\n')
+    .map((str, index, arr) => {
+      if (index !== (arr.length - 1)) {
+        return <React.Fragment key={index}>{str}<br /></React.Fragment>;
+      } else {
+        return <React.Fragment key={index}>{str}</React.Fragment>;
+      }
+    });
   const classes = useStyles();
   return (
     <>
@@ -46,10 +51,15 @@ const Output = props => {
         </Typography>
       </div>
       <div className={`${classes.entry} ${classes.mbsm}`}>
-        <pre>{JSON.stringify(state, null, 2)}</pre>;
+        <Typography variant="h3" component="h2">
+          {title}
+        </Typography>
+        <p>
+          {content}
+        </p>
       </div>
     </>
   );
-}
+};
 
 export default Output;
