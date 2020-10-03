@@ -33,13 +33,19 @@ const Output = props => {
   const { state } = useStateMachine(updateAction);
   const title = state.data.title;
   const rawContent = state.data.content;
-  const content = rawContent.split('\n')
-    .map((str, index, arr) => {
-      if (index !== (arr.length - 1)) {
-        return <React.Fragment key={index}>{str}<br /></React.Fragment>;
-      } else {
-        return <React.Fragment key={index}>{str}</React.Fragment>;
-      }
+  const regex = /\n{3,}/g;
+  const trimmedContent = rawContent.replace(regex, '\n\n');
+  const content = trimmedContent.split('\n\n')
+    .map((str, index) => {
+      const stanza = str.split('\n')
+        .map((str, index, arr) => {
+          if (index !== (arr.length - 1)) {
+            return <React.Fragment key={index}>{str}<br /></React.Fragment>;
+          } else {
+            return <React.Fragment key={index}>{str}</React.Fragment>;
+          }
+        });
+      return <p key={index}>{stanza}</p>;
     });
   const classes = useStyles();
   return (
@@ -54,9 +60,7 @@ const Output = props => {
         <Typography variant="h3" component="h2">
           {title}
         </Typography>
-        <p>
-          {content}
-        </p>
+        {content}
       </div>
     </>
   );
