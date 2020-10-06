@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useForm } from "react-hook-form";
 import { withRouter } from "react-router-dom";
@@ -59,6 +59,18 @@ const Input = props => {
   };
 
   const classes = useStyles();
+
+  const [count, setCount] = useState(0);
+  const [content, setContent] = useState('');
+
+  function handleInputChange(e) {
+    const target = e.target;
+    setContent(target.value);
+  }
+  function handleCount() {
+    setCount(content.length);
+  }
+
   return (
     <>
       <CssBaseline />
@@ -70,7 +82,16 @@ const Input = props => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={`${classes.entry} ${classes.mbsm}`}>
           <input name="title" placeholder="Title" className={`${classes.mbmd} ${classes.titleInput}`} ref={register} />
-          <TextareaAutosize name="content" rowsMin={10} placeholder="Please write your work..." className={classes.contentInput} ref={register} />
+          <TextareaAutosize
+            name="content"
+            rowsMin={10}
+            placeholder="Please write your work..."
+            className={classes.contentInput}
+            ref={register}
+            onChange={handleInputChange}
+            onKeyUp={handleCount}
+          />
+          <span>文字数：{count}</span>
         </div>
         <div className={classes.button}>
           <Button variant="outlined" type="submit">Preview</Button>
