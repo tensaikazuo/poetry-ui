@@ -60,7 +60,8 @@ const Input = props => {
 
   const classes = useStyles();
 
-  const [count, setCount] = useState(0);
+  const [cntLetter, setCntLetter] = useState(0);
+  const [cntLine, setCntLine] = useState(0);
   const [content, setContent] = useState('');
 
   function handleInputChange(e) {
@@ -68,7 +69,25 @@ const Input = props => {
     setContent(target.value);
   }
   function handleCount() {
-    setCount(content.length);
+    setCntLetter(countLetters(content));
+    setCntLine(countLines(content));
+  }
+  function countLetters(text) {
+    let numberOfNewlineChara = 0;
+    let position = text.indexOf('\n');
+    while (position !== -1) {
+      numberOfNewlineChara++;
+      position = text.indexOf('\n', position + 1);
+    }
+    return content.length - numberOfNewlineChara;
+  }
+  function countLines(text) {
+    const regex = /\n{2,}/g;
+    const trimmedContent = text.replace(regex, '\n');
+    const arr = trimmedContent.split('\n');
+    const arrTrimmed = arr.filter(elem => elem !== '');
+    const arrLength = arrTrimmed.length;
+    return arrLength;
   }
 
   return (
@@ -91,7 +110,8 @@ const Input = props => {
             onChange={handleInputChange}
             onKeyUp={handleCount}
           />
-          <span>文字数：{count}</span>
+          <span>文字数：{cntLetter}</span><br />
+          <span>行数：{cntLine}</span>
         </div>
         <div className={classes.button}>
           <Button variant="outlined" type="submit">Preview</Button>
