@@ -23,7 +23,13 @@ const useStyles = makeStyles({
     },
   },
   button: {
-    textAlign: 'center',
+    '& button': {
+      margin: '0 8px',
+    }
+  },
+  flexSec: {
+    display: 'flex',
+    justifyContent: 'center',
   },
   mbsm: {
     marginBottom: '8px',
@@ -47,7 +53,11 @@ const useStyles = makeStyles({
     outline: 'none',
     backgroundColor: '#fafafa',
     resize: 'vertical',
-  }
+  },
+  preview: {
+    width: '600px',
+    margin: '0 auto',
+  },
 });
 
 const Input = props => {
@@ -63,10 +73,14 @@ const Input = props => {
   const [cntLetter, setCntLetter] = useState(0);
   const [cntLine, setCntLine] = useState(0);
   const [content, setContent] = useState('');
+  const [cfd, setCfd] = useState('');
 
   function handleInputChange(e) {
     const target = e.target;
     setContent(target.value);
+  }
+  function updateCfd() {
+    setCfd(content);
   }
   function handleCount() {
     setCntLetter(countLetters(content));
@@ -88,6 +102,23 @@ const Input = props => {
     const arrTrimmed = arr.filter(elem => elem !== '');
     const arrLength = arrTrimmed.length;
     return arrLength;
+  }
+  function processText(text) {
+    const regex = /\n{3,}/g;
+    const trimmedContent = text.replace(regex, '\n\n');
+    const content = trimmedContent.split('\n\n')
+      .map((str, index) => {
+        const stanza = str.split('\n')
+          .map((str, index, arr) => {
+            if (index !== (arr.length - 1)) {
+              return <React.Fragment key={index}>{str}<br /></React.Fragment>;
+            } else {
+              return <React.Fragment key={index}>{str}</React.Fragment>;
+            }
+          });
+        return <p key={index}>{stanza}</p>;
+      });
+    return content;
   }
 
   return (
@@ -113,10 +144,13 @@ const Input = props => {
           <span>文字数：{cntLetter}</span><br />
           <span>行数：{cntLine}</span>
         </div>
-        <div className={classes.button}>
-          <Button variant="outlined" type="submit">Preview</Button>
+        <div className={`${classes.button} ${classes.flexSec}`}>
+          <Button variant="outlined" onClick={()=>updateCfd()}>Preview</Button>
+          <Button variant="outlined" type="submit">Output</Button>
         </div>
       </form>
+      <hr />
+      <div className={classes.preview}>{processText(cfd)}</div>
     </>
   );
 }
