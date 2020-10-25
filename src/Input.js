@@ -12,6 +12,12 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
+  root: {
+    '& p': {
+      margin: 0,
+      padding: 0,
+    },
+  },
   title: {
     textAlign: 'center',
   },
@@ -55,8 +61,23 @@ const useStyles = makeStyles({
     resize: 'vertical',
   },
   preview: {
+    marginTop: '24px',
+    borderTop: '1px dotted rgba(0, 0, 0, 0.23)',
+    counterReset: 'lines',
     width: '600px',
     margin: '0 auto',
+    '& span::before': {
+      counterIncrement: 'lines',
+      content: 'counter(lines)',
+      marginRight: '8px',
+      color: 'rgba(0, 0, 0, 0.23)',
+    },
+    '& p': {
+        marginTop: '1em',
+        '& :first-child': {
+          marginTop: '24px',
+        },
+    },
   },
 });
 
@@ -75,18 +96,18 @@ const Input = props => {
   const [content, setContent] = useState('');
   const [cfd, setCfd] = useState('');
 
-  function handleInputChange(e) {
+  const handleInputChange = e => {
     const target = e.target;
     setContent(target.value);
-  }
-  function updateCfd() {
+  };
+  const updateCfd = () => {
     setCfd(content);
-  }
-  function handleCount() {
+  };
+  const handleCount= () => {
     setCntLetter(countLetters(content));
     setCntLine(countLines(content));
-  }
-  function countLetters(text) {
+  };
+  const countLetters = text => {
     let numberOfNewlineChara = 0;
     let position = text.indexOf('\n');
     while (position !== -1) {
@@ -94,26 +115,28 @@ const Input = props => {
       position = text.indexOf('\n', position + 1);
     }
     return content.length - numberOfNewlineChara;
-  }
-  function countLines(text) {
+  };
+
+  const countLines = text => {
     const regex = /\n{2,}/g;
     const trimmedContent = text.replace(regex, '\n');
     const arr = trimmedContent.split('\n');
     const arrTrimmed = arr.filter(elem => elem !== '');
     const arrLength = arrTrimmed.length;
     return arrLength;
-  }
-  function processText(text) {
+  };
+
+  const ProcessText = props => {
     const regex = /\n{3,}/g;
-    const trimmedContent = text.replace(regex, '\n\n');
+    const trimmedContent = props.text.replace(regex, '\n\n');
     const content = trimmedContent.split('\n\n')
       .map((str, index) => {
         const stanza = str.split('\n')
           .map((str, index, arr) => {
             if (index !== (arr.length - 1)) {
-              return <React.Fragment key={index}>{str}<br /></React.Fragment>;
+              return <React.Fragment key={index}><span>{str}</span><br /></React.Fragment>;
             } else {
-              return <React.Fragment key={index}>{str}</React.Fragment>;
+              return (str !=='') ? <React.Fragment key={index}><span>{str}</span></React.Fragment> : null;
             }
           });
         return <p key={index}>{stanza}</p>;
@@ -122,7 +145,7 @@ const Input = props => {
   }
 
   return (
-    <>
+    <div className={classes.root}>
       <CssBaseline />
       <div className={classes.title}>
         <Typography variant="h2" component="h1">
@@ -149,9 +172,8 @@ const Input = props => {
           <Button variant="outlined" type="submit">Output</Button>
         </div>
       </form>
-      <hr />
-      <div className={classes.preview}>{processText(cfd)}</div>
-    </>
+      <div className={classes.preview}><ProcessText text={cfd} /></div>
+    </div>
   );
 }
 
