@@ -6,6 +6,7 @@ import updateAction from "./updateAction";
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
   title: {
@@ -19,7 +20,11 @@ const useStyles = makeStyles({
     },
   },
   button: {
+    '& button': {
+      marginTop: '16px',
+    },
     textAlign: 'center',
+    borderTop: '1px dotted rgba(0, 0, 0, 0.23)',
   },
   mbsm: {
     marginBottom: '8px',
@@ -30,6 +35,7 @@ const useStyles = makeStyles({
 });
 
 const Output = props => {
+
   const { state } = useStateMachine(updateAction);
   const title = state.data.title;
   const rawContent = state.data.content;
@@ -51,8 +57,8 @@ const Output = props => {
   return (
     <>
       <CssBaseline />
-      <div className={classes.title}>
-        <Typography variant="h2" component="h1">
+      <div className={`${classes.title} ${classes.mbmd}`}>
+        <Typography variant="h4" component="h1">
           Poetry-UI
         </Typography>
       </div>
@@ -61,6 +67,9 @@ const Output = props => {
           {title}
         </Typography>
         {content}
+      </div>
+      <div className={classes.button}>
+        <Button variant="outlined" type="submit">Back</Button>
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useForm } from "react-hook-form";
 import { withRouter } from "react-router-dom";
@@ -89,6 +89,10 @@ const Input = props => {
     props.history.push("./output");
   };
 
+  const { state } = useStateMachine(updateAction);
+  const title = state.data.title;
+  const rawContent = state.data.content;
+
   const classes = useStyles();
 
   const [cntLetter, setCntLetter] = useState(0);
@@ -114,7 +118,7 @@ const Input = props => {
       numberOfNewlineChara++;
       position = text.indexOf('\n', position + 1);
     }
-    return content.length - numberOfNewlineChara;
+    return text.length - numberOfNewlineChara;
   };
 
   const countLines = text => {
@@ -144,6 +148,37 @@ const Input = props => {
     return content;
   }
 
+  useEffect(()=>{
+    const onLoad = () => {
+      const initText = state.data.content
+
+      const countLettersE = text => {
+        let numberOfNewlineChara = 0;
+        let position = text.indexOf('\n');
+        while (position !== -1) {
+          numberOfNewlineChara++;
+          position = text.indexOf('\n', position + 1);
+        }
+        return text.length - numberOfNewlineChara;
+      };
+      const resultLetters = countLettersE(initText);
+
+      const countLinesE = text => {
+        const regex = /\n{2,}/g;
+        const trimmedContent = text.replace(regex, '\n');
+        const arr = trimmedContent.split('\n');
+        const arrTrimmed = arr.filter(elem => elem !== '');
+        const arrLength = arrTrimmed.length;
+        return arrLength;
+      };
+      const resultLines = countLinesE(initText);
+
+      setCntLetter(resultLetters);
+      setCntLine(resultLines);
+    };
+    onLoad();
+  },[state.data.content]);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -154,12 +189,13 @@ const Input = props => {
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={`${classes.entry} ${classes.mbsm}`}>
-          <input name="title" placeholder="Title" className={`${classes.mbmd} ${classes.titleInput}`} ref={register} />
+          <input name="title" placeholder="Title" className={`${classes.mbmd} ${classes.titleInput}`} defaultValue={title ? title : ''} ref={register} />
           <TextareaAutosize
             name="content"
             rowsMin={10}
             placeholder="Please write your work..."
             className={classes.contentInput}
+            defaultValue={rawContent ? rawContent : ''}
             ref={register}
             onChange={handleInputChange}
             onKeyUp={handleCount}
