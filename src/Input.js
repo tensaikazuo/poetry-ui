@@ -150,31 +150,35 @@ const Input = props => {
 
   useEffect(()=>{
     const onLoad = () => {
-      const initText = state.data.content
+      if (typeof state.data.content !== 'undefined') {
+        const initText = state.data.content;
 
-      const countLettersE = text => {
-        let numberOfNewlineChara = 0;
-        let position = text.indexOf('\n');
-        while (position !== -1) {
-          numberOfNewlineChara++;
-          position = text.indexOf('\n', position + 1);
-        }
-        return text.length - numberOfNewlineChara;
-      };
-      const resultLetters = countLettersE(initText);
+        const countLettersE = text => {
+          let numberOfNewlineChara = 0;
+          let position = text.indexOf('\n');
+          while (position !== -1) {
+            numberOfNewlineChara++;
+            position = text.indexOf('\n', position + 1);
+          }
+          return text.length - numberOfNewlineChara;
+        };
+        const resultLetters = countLettersE(initText);
 
-      const countLinesE = text => {
-        const regex = /\n{2,}/g;
-        const trimmedContent = text.replace(regex, '\n');
-        const arr = trimmedContent.split('\n');
-        const arrTrimmed = arr.filter(elem => elem !== '');
-        const arrLength = arrTrimmed.length;
-        return arrLength;
-      };
-      const resultLines = countLinesE(initText);
+        const countLinesE = text => {
+          const regex = /\n{2,}/g;
+          const trimmedContent = text.replace(regex, '\n');
+          const arr = trimmedContent.split('\n');
+          const arrTrimmed = arr.filter(elem => elem !== '');
+          const arrLength = arrTrimmed.length;
+          return arrLength;
+        };
+        const resultLines = countLinesE(initText);
 
-      setCntLetter(resultLetters);
-      setCntLine(resultLines);
+        setCntLetter(resultLetters);
+        setCntLine(resultLines);
+        setContent(initText);
+        setCfd(initText);
+      }
     };
     onLoad();
   },[state.data.content]);

@@ -2,11 +2,13 @@ import React from 'react';
 
 import { useStateMachine } from "little-state-machine";
 import updateAction from "./updateAction";
+import { withRouter } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+
 
 const useStyles = makeStyles({
   title: {
@@ -35,7 +37,9 @@ const useStyles = makeStyles({
 });
 
 const Output = props => {
-
+  const onSubmit = () => {
+    props.history.push("./");
+  };
   const { state } = useStateMachine(updateAction);
   const title = state.data.title;
   const rawContent = state.data.content;
@@ -69,10 +73,10 @@ const Output = props => {
         {content}
       </div>
       <div className={classes.button}>
-        <Button variant="outlined" type="submit">Back</Button>
+        <form onSubmit={onSubmit}><Button variant="outlined" type="submit">Back</Button></form>
       </div>
     </>
   );
 };
 
-export default Output;
+export default withRouter(Output);
